@@ -9,9 +9,11 @@
 #
 # Processing chain:
 #   - gentle high-pass filter
-#   - subtle narration-style EQ for body, presence, and brightness
-#   - about +6 dB input gain into moderate dynamic compression
-#   - final limiter to avoid clipping
+#   - narration-style EQ with extra body, presence, and brightness
+#   - +9 dB gain into cubic soft clipping
+#
+# The soft clip starts around -2 dBFS and rounds peaks toward 0 dBFS. This is
+# intentionally not dynamic compression: it is a static saturation/ceiling stage.
 #
 # This script is intentionally separate from readaloud: it is optional audio
 # post-processing, not part of text-to-speech generation.
@@ -47,15 +49,15 @@ mkdir -p "$(dirname "$output_file")"
 
 filter_chain="
 highpass=f=70,
-equalizer=f=130:t=q:w=0.8:g=1.5,
-equalizer=f=320:t=q:w=1.0:g=-1.2,
-equalizer=f=3200:t=q:w=0.9:g=1.6,
-equalizer=f=8500:t=q:w=0.7:g=1.2,
-acompressor=level_in=1.995:threshold=0.20:ratio=2.4:attack=12:release=180:makeup=1.15:knee=4:detection=rms,
-alimiter=limit=0.97
+equalizer=f=120:t=q:w=0.8:g=2.4,
+equalizer=f=260:t=q:w=1.0:g=-0.8,
+equalizer=f=3000:t=q:w=0.9:g=2.2,
+equalizer=f=9000:t=q:w=0.7:g=2.0,
+volume=9dB,
+asoftclip=type=cubic:threshold=0.794:output=1.25:oversample=4
 "
 
-ffmpeg -hide_banner -y \
+ffmpeg -hide_banner -loglevel error -y \
   -i "$input_file" \
   -af "${filter_chain//$'\n'/}" \
   -ar 24000 \
