@@ -84,3 +84,17 @@ Converted 1/1 files
 Known noisy PyTorch/Kokoro/Hugging Face warnings are silenced by default.
 
 Markdown files are read as plain text. No Markdown cleanup is applied.
+
+## Optional Audio Polish
+
+There is a separate FFmpeg helper for light voice polish:
+
+```bash
+scripts/voice_polish.sh input.wav output.wav
+```
+
+If the output path is omitted, it writes `<input>.polished.wav` next to the
+source file.
+
+It applies subtle narration-style EQ, about +6 dB of input gain into moderate
+dynamic compression, and a final limiter.
