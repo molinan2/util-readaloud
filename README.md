@@ -60,8 +60,10 @@ output_dir = "files/out"
 CLI flags override the config:
 
 ```bash
-readaloud notes.md --voice em_santa --speed 1.0
+readaloud notes.md -v em_santa -s 1.0
 ```
+
+Long options are also available: `--lang`, `--voice`, and `--speed`.
 
 Markdown files are read as plain text.
 

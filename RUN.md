@@ -43,16 +43,16 @@ readaloud files/in
 CLI options override `config.toml`:
 
 ```bash
-readaloud files/in/sample.md --lang e --voice em_santa --speed 1.0
+readaloud files/in/sample.md -l e -v em_santa -s 1.0
 ```
 
 Current options:
 
 ```text
---lang   Kokoro language code
---voice  Kokoro voice name
---speed  Speech speed
--o       Output .wav path, only valid for a single input file
+-l, --lang    Kokoro language code
+-v, --voice   Kokoro voice name
+-s, --speed   Speech speed
+-o, --output  Output .wav path, only valid for a single input file
 ```
 
 ## Spanish Voices
@@ -96,5 +96,5 @@ scripts/voice_polish.sh input.wav output.wav
 If the output path is omitted, it writes `<input>.polished.wav` next to the
 source file.
 
-It applies subtle narration-style EQ, about +6 dB of input gain into moderate
-dynamic compression, and a final limiter.
+It applies subtle narration-style EQ, about +9 dB of input gain, and soft
+clipping for predictable peak control.

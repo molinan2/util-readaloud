@@ -1,9 +1,9 @@
 import argparse
 import logging
 import os
-from pathlib import Path
 import tomllib
 import warnings
+from pathlib import Path
 
 import soundfile as sf
 from kokoro import KPipeline
@@ -57,14 +57,17 @@ def parse_args() -> argparse.Namespace:
         help="Output .wav file. Only valid when input is a single file.",
     )
     parser.add_argument(
+        "-l",
         "--lang",
         help="Kokoro language code. Overrides config.toml.",
     )
     parser.add_argument(
+        "-v",
         "--voice",
         help="Kokoro voice name. Overrides config.toml.",
     )
     parser.add_argument(
+        "-s",
         "--speed",
         type=float,
         help="Speech speed. Overrides config.toml.",
@@ -212,7 +215,9 @@ def main() -> int:
     speed = args.speed if args.speed is not None else config["speed"]
 
     if args.input is None and args.output is not None:
-        print("Output file cannot be used in default batch mode. Pass an input file too.")
+        print(
+            "Output file cannot be used in default batch mode. Pass an input file too."
+        )
         return 1
 
     if args.input is None:
