@@ -9,6 +9,7 @@ from `.txt` and `.md` files.
 - `pyenv`
 - Python 3.12
 - `espeak-ng`
+- Optional: `pipx`, for exposing `readaloud` globally
 
 Kokoro currently requires Python `>=3.10,<3.14`, so Python 3.14 is not suitable
 for this project.
@@ -80,6 +81,40 @@ Verify:
 ```bash
 readaloud --help
 ```
+
+This command is available while the virtual environment is active.
+
+## 6. Optional: expose `readaloud` globally
+
+Install `pipx`:
+
+```bash
+brew install pipx
+```
+
+Install this project in editable mode using the Python 3.12 managed by `pyenv`:
+
+```bash
+pipx install --python "$(pyenv which python)" --editable .
+```
+
+Make sure the `pipx` bin folder is available in your shell:
+
+```bash
+pipx ensurepath
+exec "$SHELL"
+```
+
+Verify:
+
+```bash
+command -v readaloud
+readaloud --help
+```
+
+After this, `readaloud` can be used from any folder without activating `.venv`.
+Because the install is editable, changes to `src/read_aloud.py` are picked up by
+the global command. If dependencies change, reinstall with `pipx`.
 
 ## Notes
 
