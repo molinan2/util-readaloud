@@ -1,8 +1,8 @@
 [kokoro]
 repo_id = "hexgrad/Kokoro-82M"
 lang = "e"
-voice = "ef_dora"
-speed = 1.0
+voice = "em_alex"
+speed = 0.9
 
 [paths]
 input_dir = "files/in"

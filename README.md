@@ -49,8 +49,8 @@ Defaults live in `config.toml`:
 [kokoro]
 repo_id = "hexgrad/Kokoro-82M"
 lang = "e"
-voice = "ef_dora"
-speed = 1.0
+voice = "em_alex"
+speed = 0.9
 
 [paths]
 input_dir = "files/in"
@@ -60,10 +60,17 @@ output_dir = "files/out"
 CLI flags override the config:
 
 ```bash
-readaloud notes.md --voice ef_dora --speed 1.0
+readaloud notes.md --voice em_santa --speed 1.0
 ```
 
 Markdown files are read as plain text.
+
+Useful Spanish male voices:
+
+```text
+em_alex   Default voice, good first choice for storytelling
+em_santa  Alternative male voice
+```
 
 ## Docs
 

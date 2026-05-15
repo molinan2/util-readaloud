@@ -43,7 +43,7 @@ readaloud files/in
 CLI options override `config.toml`:
 
 ```bash
-readaloud files/in/sample.md --lang e --voice ef_dora --speed 1.0
+readaloud files/in/sample.md --lang e --voice em_santa --speed 1.0
 ```
 
 Current options:
@@ -53,6 +53,22 @@ Current options:
 --voice  Kokoro voice name
 --speed  Speech speed
 -o       Output .wav path, only valid for a single input file
+```
+
+## Spanish Voices
+
+Current useful Spanish male voices:
+
+```text
+em_alex   Default voice, good first choice for storytelling
+em_santa  Alternative male voice
+```
+
+The prefix means:
+
+```text
+e = Spanish
+m = male
 ```
 
 ## Output
