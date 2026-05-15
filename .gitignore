@@ -1,0 +1,11 @@
+.idea
+.DS_Store
+.venv/
+node_modules
+
+files/**
+!files/
+!files/in/
+!files/out/
+!files/in/.gitkeep
+!files/out/.gitkeep
