@@ -1,12 +1,12 @@
 # Running
 
-Activate the virtual environment first:
+Activate the virtual environment:
 
 ```bash
 source .venv/bin/activate
 ```
 
-## Batch mode
+## Default Batch Mode
 
 Convert every `.txt` and `.md` file in `files/in/` and write `.wav` files to
 `files/out/`:
@@ -15,21 +15,21 @@ Convert every `.txt` and `.md` file in `files/in/` and write `.wav` files to
 readaloud
 ```
 
-## Single file mode
+## Single File
 
-Convert one explicit file next to the original, with the same base name:
+Convert one file next to the original:
 
 ```bash
 readaloud notes.txt
 ```
 
-Or choose the output path explicitly:
+Choose an explicit output path:
 
 ```bash
 readaloud files/in/sample.txt -o files/out/sample.wav
 ```
 
-## Directory mode
+## Directory
 
 Convert every `.txt` and `.md` file directly inside a folder, writing each
 `.wav` next to its source file:
@@ -38,51 +38,33 @@ Convert every `.txt` and `.md` file directly inside a folder, writing each
 readaloud files/in
 ```
 
-## Optional settings
+## Options
 
-Defaults live in `config.toml`:
-
-```toml
-[kokoro]
-repo_id = "hexgrad/Kokoro-82M"
-lang = "e"
-voice = "ef_dora"
-speed = 1.0
-
-[paths]
-input_dir = "files/in"
-output_dir = "files/out"
-```
-
-CLI flags override the config:
+CLI options override `config.toml`:
 
 ```bash
 readaloud files/in/sample.md --lang e --voice ef_dora --speed 1.0
 ```
 
+Current options:
+
+```text
+--lang   Kokoro language code
+--voice  Kokoro voice name
+--speed  Speech speed
+-o       Output .wav path, only valid for a single input file
+```
+
+## Output
+
+Normal runs print one line when a file starts and one line when it finishes:
+
+```text
+Processing files/in/sample.txt
+Generated files/out/sample.wav (1 chunks, 2.7s)
+Converted 1/1 files
+```
+
+Known noisy PyTorch/Kokoro/Hugging Face warnings are silenced by default.
+
 Markdown files are read as plain text. No Markdown cleanup is applied.
-
-## Global command
-
-Install the project in editable mode inside the virtual environment:
-
-```bash
-python -m pip install -e .
-```
-
-Then run:
-
-```bash
-readaloud
-readaloud notes.txt
-readaloud files/in
-```
-
-The underlying script can still be run directly:
-
-```bash
-python src/read_aloud.py
-```
-
-Known noisy library warnings from PyTorch/Kokoro/Hugging Face are silenced by
-default so normal runs only print conversion progress.

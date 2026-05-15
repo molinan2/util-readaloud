@@ -132,6 +132,7 @@ def convert_file(
     if not validate_paths(input_path, output_path):
         return False
 
+    print(f"Processing {input_path}")
     text = input_path.read_text(encoding="utf-8").strip()
     if not text:
         print(f"Skipping {input_path}: input file is empty")

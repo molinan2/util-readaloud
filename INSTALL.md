@@ -1,81 +1,23 @@
-# Installation Notes
+# Installation
 
-This project builds a small Python command-line tool that reads `.txt` or `.md`
-files and generates audio using Kokoro.
+This project uses Python 3.12, Kokoro, and `soundfile` to generate WAV audio
+from `.txt` and `.md` files.
 
-These notes track the setup decisions and commands as we go.
+## Requirements
 
-## Current Machine Context
+- macOS with Homebrew
+- `pyenv`
+- Python 3.12
+- `espeak-ng`
 
-- macOS on Apple Silicon (`arm64`)
-- Homebrew is available
-- `python3` currently points to Python 3.14.3
-- `python` is not currently available in `PATH`
-- `uv` is not currently available in `PATH`
-- `pipx` is not currently available in `PATH`
-- `espeak-ng` is not installed via Homebrew
+Kokoro currently requires Python `>=3.10,<3.14`, so Python 3.14 is not suitable
+for this project.
 
-## Python Version Choice
-
-Kokoro currently declares:
-
-```text
-requires-python = ">=3.10, <3.14"
-```
-
-So Python 3.14 is not suitable for this project right now.
-
-Recommended version for this project:
-
-```text
-Python 3.12.x
-```
-
-Python 3.11 would also be a conservative fallback if needed.
-
-## Tools We Will Use
-
-- `pyenv` to install and select the Python version for this project.
-- `venv` to create a project-local virtual environment.
-- `pip` to install Python packages inside that virtual environment.
-- Homebrew to install system dependencies such as `espeak-ng`.
-
-## Project Layout
-
-Application code will live under:
-
-```text
-src/
-```
-
-Input and output files live under:
-
-```text
-files/in/
-files/out/
-```
-
-Project defaults live in:
-
-```text
-config.toml
-```
-
-## Step 1: Install pyenv
-
-Install `pyenv` with Homebrew:
+## 1. Install pyenv
 
 ```bash
 brew install pyenv
 ```
-
-Then verify it is installed:
-
-```bash
-pyenv --version
-```
-
-## Step 2: Configure pyenv in the shell
 
 For `zsh`, add this to `~/.zshrc` if it is not already present:
 
@@ -85,152 +27,63 @@ export PYENV_ROOT="$HOME/.pyenv"
 eval "$(pyenv init -)"
 ```
 
-Then reload the shell:
+Reload the shell:
 
 ```bash
 exec "$SHELL"
 ```
 
-Verify that `pyenv` works:
-
-```bash
-pyenv --version
-```
-
-## Step 3: Install Python 3.12
-
-Install a Python 3.12 release with `pyenv`:
+## 2. Install Python
 
 ```bash
 pyenv install 3.12
-```
-
-Set Python 3.12 for this project:
-
-```bash
 pyenv local 3.12
-```
-
-Verify:
-
-```bash
 python --version
 ```
 
-## Step 4: Install espeak-ng
-
-Kokoro uses `espeak-ng` for fallback and for some language support.
-
-Install it with Homebrew:
+## 3. Install espeak-ng
 
 ```bash
 brew install espeak-ng
-```
-
-Verify:
-
-```bash
 espeak-ng --version
 ```
 
-## Step 5: Create the virtual environment
-
-Create a project-local virtual environment:
+## 4. Create the virtual environment
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip
 ```
 
-Verify that the active Python comes from `.venv`:
+Verify:
 
 ```bash
 which python
 python --version
 ```
 
-Expected shape:
+The Python path should point inside `.venv/`.
 
-```text
-/Users/juanma/dev/own/util-readaloud/.venv/bin/python
-Python 3.12.x
-```
+## 5. Install the project
 
-## Step 6: Upgrade pip
-
-With the virtual environment activated:
-
-```bash
-python -m pip install --upgrade pip
-```
-
-## Step 7: Install Python dependencies
-
-Project dependencies are listed in:
-
-```text
-requirements.txt
-```
-
-Install them with the virtual environment activated:
+Install dependencies and expose the `readaloud` command inside the active
+virtual environment:
 
 ```bash
 python -m pip install -r requirements.txt
-```
-
-The project also has a `pyproject.toml` so it can expose a local CLI command.
-Install it in editable mode with the virtual environment activated:
-
-```bash
 python -m pip install -e .
 ```
 
-This makes the `readaloud` command available inside the active environment.
-
-Verify that Kokoro can be imported:
+Verify:
 
 ```bash
-python -c "import kokoro; print('kokoro ok')"
+readaloud --help
 ```
 
-At this point, the import works.
+## Notes
 
-## Next Step After This
-
-Create a minimal smoke test under `src/` that generates a `.wav` file from a
-fixed sentence.
-
-Smoke test status:
-
-- `src/smoke_kokoro.py` generates `smoke-0.wav`.
-- The generated `.wav` has been listened to and works.
-
-## Step 8: Read a text file
-
-Create a simple script that reads a `.txt` or `.md` file and writes a `.wav`:
-
-```bash
-readaloud files/in/input.txt
-```
-
-Current behavior:
-
-- Reads UTF-8 text from `.txt` or `.md`.
-- Reads Markdown as plain text, without cleanup.
-- Uses Kokoro settings from `config.toml` unless CLI flags override them.
-- Writes a single `.wav` file at 24 kHz.
-- Streams all generated chunks into one final audio file instead of keeping the
-  full audio in memory.
-- Uses RF64 output to support very large WAV-compatible files.
-- If called without an input file, converts every `.txt` and `.md` file in
-  `files/in/` and writes results to `files/out/`.
-- If called with a single file, writes `<same-name>.wav` next to that file unless
-  `-o/--output` is provided.
-- If called with a directory, converts all `.txt` and `.md` files directly inside
-  it and writes each `.wav` next to its source file.
-
-Optional CLI flags:
-
-```bash
-readaloud files/in/input.md --lang e --voice ef_dora --speed 1.0
-```
+- `config.toml` stores default Kokoro settings and default input/output folders.
+- CLI flags override `config.toml`.
+- Markdown files are read as plain text.
+- Known noisy PyTorch/Kokoro/Hugging Face warnings are silenced by default.
