@@ -55,6 +55,12 @@ files/in/
 files/out/
 ```
 
+Project defaults live in:
+
+```text
+config.toml
+```
+
 ## Step 1: Install pyenv
 
 Install `pyenv` with Homebrew:
@@ -172,6 +178,15 @@ Install them with the virtual environment activated:
 python -m pip install -r requirements.txt
 ```
 
+The project also has a `pyproject.toml` so it can expose a local CLI command.
+Install it in editable mode with the virtual environment activated:
+
+```bash
+python -m pip install -e .
+```
+
+This makes the `readaloud` command available inside the active environment.
+
 Verify that Kokoro can be imported:
 
 ```bash
@@ -195,22 +210,27 @@ Smoke test status:
 Create a simple script that reads a `.txt` or `.md` file and writes a `.wav`:
 
 ```bash
-python src/read_aloud.py files/in/input.txt -o files/out/output.wav
+readaloud files/in/input.txt
 ```
 
 Current behavior:
 
 - Reads UTF-8 text from `.txt` or `.md`.
-- Uses Spanish Kokoro settings: `lang_code="e"` and `voice="ef_dora"`.
+- Reads Markdown as plain text, without cleanup.
+- Uses Kokoro settings from `config.toml` unless CLI flags override them.
 - Writes a single `.wav` file at 24 kHz.
 - Streams all generated chunks into one final audio file instead of keeping the
   full audio in memory.
 - Uses RF64 output to support very large WAV-compatible files.
 - If called without an input file, converts every `.txt` and `.md` file in
   `files/in/` and writes results to `files/out/`.
+- If called with a single file, writes `<same-name>.wav` next to that file unless
+  `-o/--output` is provided.
+- If called with a directory, converts all `.txt` and `.md` files directly inside
+  it and writes each `.wav` next to its source file.
 
 Optional CLI flags:
 
 ```bash
-python src/read_aloud.py files/in/input.md -o files/out/output.wav --lang e --voice ef_dora --speed 1.0
+readaloud files/in/input.md --lang e --voice ef_dora --speed 1.0
 ```

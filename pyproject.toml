@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "util-readaloud"
+version = "0.1.0"
+description = "Generate WAV audio from text and Markdown files using Kokoro."
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "kokoro>=0.9.4",
+    "soundfile",
+]
+
+[project.scripts]
+readaloud = "read_aloud:main"
+
+[tool.setuptools]
+py-modules = ["read_aloud"]
+
+[tool.setuptools.package-dir]
+"" = "src"
